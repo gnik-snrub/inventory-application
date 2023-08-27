@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const PlatformSchema = new Schema({
   name: { type: String, required: true, maxLength: 100, minLength: 3 },
-  price: { type: Number, required: true, },
+  price: { type: Number, required: false, },
   numberInStock: { type: Number, required: true },
   summary: { type: String, required: false, maxLength: 200, minLength: 3 },
   manufacturer: { type: String, required: true, maxLength: 50, minLength: 3 },
