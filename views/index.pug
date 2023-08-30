@@ -2,4 +2,17 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+
+  p The following items are currently in inventory
+
+  hr
+
+  p #[strong Unique Items] | In Stock
+
+  p #[strong Games - !{gameCount}] | !{gameStockCount[0].numberInStock}
+  p #[strong Platforms - !{platformCount}] | !{platformStockCount[0].numberInStock}
+  p #[strong Accessories - !{accessoryCount}] | !{accessoryStockCount[0].numberInStock}
+  p #[strong Merchandise - !{merchandiseCount}] | !{merchandiseStockCount[0].numberInStock}
+  hr
+  p #[strong Genres - ] !{genreCount}
+  p #[strong Developers - ] !{developerCount}
