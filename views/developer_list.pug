@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+
+  hr
+
+  each developer in allDevelopers
+    li
+      a(href=developer.url) #{developer.name}
