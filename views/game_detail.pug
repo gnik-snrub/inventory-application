@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  h1 Game - #{game.title}
+
+  p 
+    if game.numberInStock > 0
+      | #[strong #{game.numberInStock}] currently in stock
+    else
+      | Currently out of stock
+    |  - #[strong $#{game.price}]
+
+  hr
+  p #{game.summary}
+  hr
+
+  p #[strong Developers: ]
+    each developer, index in game.developer
+      a(href=developer.url) #{developer.name}
+      if index !== game.developer.length - 1
+        | , 
+        
+  p #[strong Genres: ] 
+    each genre, index in game.genre
+      a(href=genre.url) #{genre.name}
+      if index !== game.genre.length - 1
+        | , 
+
+  p #[strong Platforms: ] 
+    each platform, index in game.platform
+      a(href=platform.url) #{platform.name}
+      if index !== game.platform.length - 1
+        | , 
