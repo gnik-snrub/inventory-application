@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+
+  hr
+  each game in genreGames
+    li
+      a(href=game.url) #{game.title}
+      p #{game.summary}
