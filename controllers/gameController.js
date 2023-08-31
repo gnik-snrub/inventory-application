@@ -74,4 +74,7 @@ exports.gameUpdateGet = async(req, res, next) => {}
 exports.gameUpdatePost = async(req, res, next) => {}
 
 exports.gameDetail = async(req, res, next) => {}
-exports.gameList = async(req, res, next) => {}
+exports.gameList = async(req, res, next) => {
+  const allGames = await Game.find().exec()
+  res.render('game_list', { title: 'Game List', allGames})
+}

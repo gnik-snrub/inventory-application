@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+
+  each game in allGames
+    hr
+    p #[strong $#{game.price}] - 
+      a(href=game.url) #{game.title}
+      |  - #[strong #{game.numberInStock}] in stock
+    p
+      each genre in game.genre
+        span #{genre.name}   
+    p(class='w-75 p-3') #{game.summary}
