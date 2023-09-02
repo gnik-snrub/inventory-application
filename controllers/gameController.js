@@ -5,7 +5,9 @@ const Merchandise = require('../models/merchandise')
 const Genre = require('../models/genre')
 const Developer = require('../models/developer')
 
-exports.index = async (req, res, next) => {
+const asyncHandler = require('express-async-handler')
+
+exports.index = asyncHandler(async (req, res, next) => {
   const [
     gameCount,
     gameStockCount,
@@ -62,25 +64,25 @@ exports.index = async (req, res, next) => {
     genreCount,
     developerCount
   })
-}
+})
 
-exports.gameCreateGet = async(req, res, next) => {}
-exports.gameCreatePost = async(req, res, next) => {}
+exports.gameCreateGet = asyncHandler(async(req, res, next) => {})
+exports.gameCreatePost = asyncHandler(async(req, res, next) => {})
 
-exports.gameDeleteGet = async(req, res, next) => {}
-exports.gameDeletePost = async(req, res, next) => {}
+exports.gameDeleteGet = asyncHandler(async(req, res, next) => {})
+exports.gameDeletePost = asyncHandler(async(req, res, next) => {})
 
-exports.gameUpdateGet = async(req, res, next) => {}
-exports.gameUpdatePost = async(req, res, next) => {}
+exports.gameUpdateGet = asyncHandler(async(req, res, next) => {})
+exports.gameUpdatePost = asyncHandler(async(req, res, next) => {})
 
-exports.gameDetail = async(req, res, next) => {
+exports.gameDetail = asyncHandler(async(req, res, next) => {
   const [game, relatedMerchandise] = await Promise.all([
     Game.findById(req.params.id).populate('developer').populate('genre').populate('platform').exec(),
     Merchandise.find({relatedGames: req.params.id}).exec()
   ])
   res.render('game_detail', { title: game.title + ' details', game, relatedMerchandise})
-}
-exports.gameList = async(req, res, next) => {
+})
+exports.gameList = asyncHandler(async(req, res, next) => {
   const allGames = await Game.find().exec()
   res.render('game_list', { title: 'Game List', allGames})
-}
+})
