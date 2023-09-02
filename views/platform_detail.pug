@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1= title
+
+  p 
+    if platform.numberInStock > 0
+      | #[strong #{platform.numberInStock}] currently in stock
+    else
+      | Currently out of stock
+    |  - #[strong $#{platform.price}]
+
+  hr
+  p #{platform.summary}
+  hr
+
+  p #[strong Manufacturer:]  #{platform.manufacturer}
+  p #[strong Release Date:]  #{platform.releaseDate_formatted}
+
+  hr
+  p #[strong Games on the #{platform.name} platform]
+  each game in platformGames
+    li
+      a(href=game.url) #{game.title}
+
+  hr
+  p #[strong Accessories compatible with the #{platform.name} platform]
+  each accessory in platformAccessories
+    li
+      a(href=accessory.url) #{accessory.name}
