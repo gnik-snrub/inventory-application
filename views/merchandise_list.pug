@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+
+  hr
+  each merchandise in allMerchandise
+    li
+      a(href=merchandise.url) #{merchandise.name}
