@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+
+  hr
+  each platform in allPlatforms
+    li
+      a(href=platform.url) #{platform.name}
