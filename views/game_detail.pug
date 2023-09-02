@@ -31,3 +31,12 @@ block content
       a(href=platform.url) #{platform.name}
       if index !== game.platform.length - 1
         | , 
+
+  hr
+  p #[strong Related merchandise]
+  if relatedMerchandise.length > 0
+    each merchandise in relatedMerchandise
+      li
+        a(href=merchandise.url) #{merchandise.name}
+  else
+    p No related merchandise found

@@ -74,12 +74,11 @@ exports.gameUpdateGet = async(req, res, next) => {}
 exports.gameUpdatePost = async(req, res, next) => {}
 
 exports.gameDetail = async(req, res, next) => {
-  const game = await Game.findById(req.params.id)
-    .populate('developer')
-    .populate('genre')
-    .populate('platform')
-    .exec()
-  res.render('game_detail', { title: game.title + ' details', game})
+  const [game, relatedMerchandise] = await Promise.all([
+    Game.findById(req.params.id).populate('developer').populate('genre').populate('platform').exec(),
+    Merchandise.find({relatedGames: req.params.id}).exec()
+  ])
+  res.render('game_detail', { title: game.title + ' details', game, relatedMerchandise})
 }
 exports.gameList = async(req, res, next) => {
   const allGames = await Game.find().exec()
