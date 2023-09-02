@@ -80,7 +80,7 @@ router.get('/accessory/:id/update', accessoryController.accessoryUpdateGet)
 router.post('/accessory/:id/update', accessoryController.accessoryUpdatePost)
 
 router.get('/accessory/:id', accessoryController.accessoryDetail)
-router.get('/accessorys', accessoryController.accessoryList)
+router.get('/accessories', accessoryController.accessoryList)
 
 // Merchandise pages
 
