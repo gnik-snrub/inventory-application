@@ -5,8 +5,33 @@ const { body, validationResult } = require('express-validator')
 const asyncHandler = require('express-async-handler')
 
 exports.genreCreateGet = asyncHandler(async(req, res, next) => {
+  res.render('genre_form', { title: 'Create Genre' })
 })
+exports.genreCreatePost = [
+  body('name', 'Genre name must not be empty').trim().isLength({ min: 1 }).escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
 
+    const genre = new Genre({name: req.body.name})
+
+    if(!errors.isEmpty()) {
+      res.render('genre_form', {
+        title: 'Create Genre',
+        genre,
+        errors: errors.array()
+      })
+      return
+    } else {
+      const genreExists = await Genre.findOne({name: req.body.name}).collation({ locale: 'en', strength: 2 }).exec()
+      if (genreExists) {
+        res.redirect(genreExists.url)
+      } else {
+        await genre.save()
+        res.redirect(genre.url)
+      }
+    }
+  })
+]
 
 exports.genreDeleteGet = asyncHandler(async(req, res, next) => {})
 exports.genreDeletePost = asyncHandler(async(req, res, next) => {})
