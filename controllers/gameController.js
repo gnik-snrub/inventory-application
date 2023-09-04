@@ -5,6 +5,7 @@ const Merchandise = require('../models/merchandise')
 const Genre = require('../models/genre')
 const Developer = require('../models/developer')
 
+const { body, validationResult } = require('express-validator')
 const asyncHandler = require('express-async-handler')
 
 exports.index = asyncHandler(async (req, res, next) => {
@@ -66,8 +67,80 @@ exports.index = asyncHandler(async (req, res, next) => {
   })
 })
 
-exports.gameCreateGet = asyncHandler(async(req, res, next) => {})
-exports.gameCreatePost = asyncHandler(async(req, res, next) => {})
+exports.gameCreateGet = asyncHandler(async(req, res, next) => {
+  const [allDevelopers, allGenres, allPlatforms] = await Promise.all([
+    Developer.find().exec(),
+    Genre.find().exec(),
+    Platform.find().exec(),
+  ])
+  res.render('game_form', {
+    title: 'Create Game',
+    allDevelopers,
+    allGenres,
+    allPlatforms
+  })
+})
+exports.gameCreatePost = [
+  body('title', 'Title must not be empty').trim().notEmpty(),
+  body('price', 'Accessory must have price higher than 0').notEmpty().isInt({ min: 1 }),
+  body('summary', 'Accessory must have summary').trim().notEmpty(),
+  body('numberInStock', 'Accessory stock count must be included (0 is acceptable)').notEmpty(),
+  body('developer.*').escape(),
+  body('genre.*').escape(),
+  body('platform.*').escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const game = new Game({
+      title: req.body.title,
+      price: req.body.price,
+      summary: req.body.summary,
+      numberInStock: req.body.numberInStock,
+      developer: req.body.developer,
+      genre: req.body.genre,
+      platform: req.body.platform,
+    })
+
+    if (!errors.isEmpty()) {
+      const [allDevelopers, allGenres, allPlatforms] = await Promise.all([
+        Developer.find().exec(),
+        Genre.find().exec(),
+        Platform.find().exec(),
+      ])
+
+      for (const developer of allDevelopers) {
+        if (game.compatiblePlatforms.includes(developer._id)) {
+          developer.checked = 'true'
+        }
+      }
+
+      for (const genre of allGenres) {
+        if (game.compatiblePlatforms.includes(genre._id)) {
+          genre.checked = 'true'
+        }
+      }
+
+      for (const platform of allPlatforms) {
+        if (game.compatiblePlatforms.includes(platform._id)) {
+          platform.checked = 'true'
+        }
+      }
+
+      res.render('game_form', {
+        title: 'Create Game',
+        errors: errors.array(),
+        game,
+        allDevelopers,
+        allGenres,
+        allPlatforms
+      })
+      return
+    } else {
+      await game.save()
+      res.redirect(game.url)
+    }
+  })
+]
 
 exports.gameDeleteGet = asyncHandler(async(req, res, next) => {})
 exports.gameDeletePost = asyncHandler(async(req, res, next) => {})
