@@ -1,9 +1,52 @@
 const Accessory = require('../models/accessory')
+const Platform = require('../models/platform')
 
+const { body, validationResult } = require('express-validator')
 const asyncHandler = require('express-async-handler')
 
-exports.accessoryCreateGet = asyncHandler(async(req, res, next) => {})
-exports.accessoryCreatePost = asyncHandler(async(req, res, next) => {})
+exports.accessoryCreateGet = asyncHandler(async(req, res, next) => {
+  const platforms = await Platform.find().exec()
+  res.render('accessory_form', { title: 'Create Accessory', platforms})
+})
+exports.accessoryCreatePost = [
+  body('name', 'Accessory name must not be empty').trim().notEmpty(),
+  body('price', 'Accessory must have price higher than 0').notEmpty().isInt({ min: 1 }),
+  body('summary', 'Accessory must have summary').trim().notEmpty(),
+  body('numberInStock', 'Accessory stock count must be included (0 is acceptable)').notEmpty(),
+  body('compatiblePlatforms.*').escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const accessory = new Accessory({
+      name: req.body.name,
+      price: req.body.price,
+      summary: req.body.summary,
+      numberInStock: req.body.numberInStock,
+      compatiblePlatforms: req.body.compatiblePlatforms
+    })
+
+    if (!errors.isEmpty()) {
+      const platforms = await Platform.find().exec()
+
+      for (const platform of platforms) {
+        if (accessory.compatiblePlatforms.includes(platform._id)) {
+          platform.checked = 'true'
+        }
+      }
+
+      res.render('accessory_form', {
+        title: 'Create Accessory',
+        platforms,
+        accessory,
+        errors: errors.array()
+      })
+      return
+    } else {
+      await accessory.save()
+      res.redirect(accessory.url)
+    }
+  })
+]
 
 exports.accessoryDeleteGet = asyncHandler(async(req, res, next) => {})
 exports.accessoryDeletePost = asyncHandler(async(req, res, next) => {})
