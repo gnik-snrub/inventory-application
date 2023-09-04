@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='name') Platform:
+      input#name.form-control(type='text' placeholder='Nintendo, Naughty Dog, etc.' name='name' value=(undefined===platform ? '' : platform.name))
+    div.form-group
+      label(for='price') Price: 
+      input#price.form-control(type='number' placeholder='$100, $200, etc.' name='price' value=(undefined===platform ? '' : platform.price))
+    div.form-group
+      label(for='numberInStock') In Stock: 
+      input#numberInStock.form-control(type='number' placeholder='5, 10, etc.' name='numberInStock' value=(undefined===platform ? '' : platform.numberInStock))
+    div.form-group
+      label(for='manufacturer') Manufacturer: 
+      input#manufacturer.form-control(type='text' placeholder='Sony, Nintendo, etc.' name='manufacturer' value=(undefined===platform ? '' : platform.manufacturer))
+    div.form-group
+      label(for='releaseDate') Release Date: 
+      input#releaseDate.form-control(type='date' placeholder='01/01/2001' name='releaseDate' value=(undefined===platform ? '' : platform.releaseDate))
+    div.form-group
+      label(for='summary') Summary: 
+      input#summary.form-control(type='textarea' placeholder='Summary goes here' name='summary' value=(undefined===platform ? '' : platform.summary))
+    button.btn.btn-primary(type='submit') Submit
+
+    if errors
+      ul
+        for error in errors
+          li!= error.msg
