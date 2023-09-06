@@ -27,6 +27,13 @@ exports.merchandiseCreatePost = [
 
     if (!errors.isEmpty()) {
       const allGames = await Game.find().exec()
+
+      for (const game of allGames) {
+        if (merchandise.relatedGames.includes(game._id)) {
+          game.checked = 'true'
+        }
+      }
+
       res.render('merchandise_form', {
         title: 'Create Merchandise',
         errors: errors.array(),
