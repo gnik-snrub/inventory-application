@@ -8,7 +8,7 @@ exports.genreCreateGet = asyncHandler(async(req, res, next) => {
   res.render('genre_form', { title: 'Create Genre' })
 })
 exports.genreCreatePost = [
-  body('name', 'Genre name must not be empty').trim().isLength({ min: 1 }).escape(),
+  body('name', 'Genre name must have at least one character').trim().isLength({ min: 1 }).escape(),
   asyncHandler(async(req, res, next) => {
     const errors = validationResult(req)
 

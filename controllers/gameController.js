@@ -81,10 +81,10 @@ exports.gameCreateGet = asyncHandler(async(req, res, next) => {
   })
 })
 exports.gameCreatePost = [
-  body('title', 'Title must not be empty').trim().isLength({min: 3, max: 100}),
-  body('price', 'Accessory must have price higher than 0').notEmpty(),
-  body('summary', 'Accessory must have summary').trim().isLength({min: 3, max: 200}),
-  body('numberInStock', 'Accessory stock count must be included (0 is acceptable)').notEmpty(),
+  body('title', 'Game title must be between 3 and 100 characters').trim().isLength({min: 3, max: 100}),
+  body('price', 'Game must have a price').notEmpty(),
+  body('summary', 'Game summary must be between 3 and 200 characters').trim().isLength({min: 3, max: 200}),
+  body('numberInStock', 'Game stock count must be included').notEmpty(),
   body('developer.*').escape(),
   body('genre.*').escape(),
   body('platform.*').escape(),

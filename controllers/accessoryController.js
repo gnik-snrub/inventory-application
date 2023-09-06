@@ -9,10 +9,10 @@ exports.accessoryCreateGet = asyncHandler(async(req, res, next) => {
   res.render('accessory_form', { title: 'Create Accessory', platforms})
 })
 exports.accessoryCreatePost = [
-  body('name', 'Accessory name must not be empty').trim().isLength({ min: 3, max: 100 }),
+  body('name', 'Accessory name must be between 3 and 100 characters').trim().isLength({ min: 3, max: 100 }),
   body('price', 'Accessory must have price higher than 0').notEmpty(),
-  body('summary', 'Accessory must have summary').trim().isLength({ min: 3, max: 200 }),
-  body('numberInStock', 'Accessory stock count must be included (0 is acceptable)').notEmpty(),
+  body('numberInStock', 'Accessory stock count must be included').notEmpty(),
+  body('summary', 'Accessory summary must have between 3 and 200 characters').trim().isLength({ min: 3, max: 200 }),
   body('compatiblePlatforms.*').escape(),
   asyncHandler(async(req, res, next) => {
     const errors = validationResult(req)

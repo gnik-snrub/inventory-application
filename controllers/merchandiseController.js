@@ -9,10 +9,10 @@ exports.merchandiseCreateGet = asyncHandler(async(req, res, next) => {
   res.render('merchandise_form', { title: 'Create Merchandise', allGames })
 })
 exports.merchandiseCreatePost = [
-  body('name', 'Title must not be empty').trim().isLength({min: 3, max: 100}),
-  body('price', 'Accessory must have price higher than 0').notEmpty(),
-  body('summary', 'Accessory must have summary').trim().isLength({min: 3, max: 200}),
-  body('numberInStock', 'Accessory stock count must be included (0 is acceptable)').notEmpty(),
+  body('name', 'Title must have between 3 and 100 characters').trim().isLength({min: 3, max: 100}),
+  body('price', 'Merchandise must have a price').notEmpty(),
+  body('summary', 'Merchandise must have between 3 and 200 characters').trim().isLength({min: 3, max: 200}),
+  body('numberInStock', 'Merchandise stock count must be included').notEmpty(),
   body('relatedGames.*').escape(),
   asyncHandler(async(req, res, next) => {
     const errors = validationResult(req)

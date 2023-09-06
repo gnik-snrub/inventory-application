@@ -8,7 +8,7 @@ exports.developerCreateGet = asyncHandler(async(req, res, next) => {
   res.render('developer_form', { title: 'Create Developer'})
 })
 exports.developerCreatePost = [
-  body('name', 'Developer name must not be empty').trim().isLength({ min: 1 }).escape(),
+  body('name', 'Developer name must have at least one character').trim().isLength({ min: 1 }).escape(),
   asyncHandler(async(req, res, next) => {
     const errors = validationResult(req)
 
