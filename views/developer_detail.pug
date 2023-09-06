@@ -8,3 +8,7 @@ block content
     li
       a(href=game.url) #{game.title}
       p #{game.summary}
+
+  if developerGames.length > 0
+    hr
+  a(href=developer._id + '/delete') Delete Developer

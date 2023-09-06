@@ -33,8 +33,27 @@ exports.developerCreatePost = [
   })
 ]
 
-exports.developerDeleteGet = asyncHandler(async(req, res, next) => {})
-exports.developerDeletePost = asyncHandler(async(req, res, next) => {})
+exports.developerDeleteGet = asyncHandler(async(req, res, next) => {
+  const [developer, allGamesWithDeveloper] = await Promise.all([
+    Developer.findById(req.params.id).exec(),
+    Game.find({developer: req.params.id}, 'title summary').exec()
+  ])
+  res.render('developer_delete', {title: 'Delete Developer', developer, allGamesWithDeveloper})
+})
+exports.developerDeletePost = asyncHandler(async(req, res, next) => {
+  const [developer, allGamesWithDeveloper] = await Promise.all([
+    Developer.findById(req.params.id).exec(),
+    Game.find({developer: req.params.id}, 'title summary').exec()
+  ])
+
+  if (allGamesWithDeveloper.length > 0) {
+    res.render('developer_delete', {title: 'Delete Developer', developer, allGamesWithDeveloper})
+    return
+  } else {
+    await Developer.findByIdAndRemove(req.body.developerid)
+    res.redirect('/shop/developers')
+  }
+})
 
 exports.developerUpdateGet = asyncHandler(async(req, res, next) => {})
 exports.developerUpdatePost = asyncHandler(async(req, res, next) => {})

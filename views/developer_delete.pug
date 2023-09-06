@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 #{title} #{developer.name}
+
+  hr
+
+  if allGamesWithDeveloper.length > 0
+    p #[strong Delete the following games before deleting this developer]
+    div(style='margin-left: 20px;')
+      each game in allGamesWithDeveloper
+        a(href=game.url) #{game.title}
+        p #{game.summary}
+  else
+    p Are you #[strong sure] you want to delete the "#{developer.name}" developer?
+
+    form(method='POST' action='')
+      div.form-group
+        input#developerid.form-control(type='hidden' name='developerid' required='true' value=developer._id)
+
+      button.btn.btn-primary(type='submit') Delete

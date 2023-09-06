@@ -9,4 +9,6 @@ block content
       a(href=game.url) #{game.title}
       p #{game.summary}
 
+  if genreGames.length > 0
+    hr
   a(href=genre._id + '/delete') Delete Genre
