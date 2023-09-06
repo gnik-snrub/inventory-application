@@ -48,8 +48,14 @@ exports.accessoryCreatePost = [
   })
 ]
 
-exports.accessoryDeleteGet = asyncHandler(async(req, res, next) => {})
-exports.accessoryDeletePost = asyncHandler(async(req, res, next) => {})
+exports.accessoryDeleteGet = asyncHandler(async(req, res, next) => {
+  const accessory = await Accessory.findById(req.params.id).exec()
+  res.render('accessory_delete', {title: 'Delete Accessory', accessory})
+})
+exports.accessoryDeletePost = asyncHandler(async(req, res, next) => {
+  await Accessory.findByIdAndRemove(req.body.accessoryid)
+  res.redirect('/shop/accessories')
+})
 
 exports.accessoryUpdateGet = asyncHandler(async(req, res, next) => {})
 exports.accessoryUpdatePost = asyncHandler(async(req, res, next) => {})
