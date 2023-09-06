@@ -33,8 +33,27 @@ exports.genreCreatePost = [
   })
 ]
 
-exports.genreDeleteGet = asyncHandler(async(req, res, next) => {})
-exports.genreDeletePost = asyncHandler(async(req, res, next) => {})
+exports.genreDeleteGet = asyncHandler(async(req, res, next) => {
+  const [genre, allGamesWithGenre] = await Promise.all([
+    Genre.findById(req.params.id).exec(),
+    Game.find({genre: req.params.id}, 'title summary').exec()
+  ])
+  res.render('genre_delete', {title: 'Delete Genre', genre, allGamesWithGenre})
+})
+exports.genreDeletePost = asyncHandler(async(req, res, next) => {
+  const [genre, allGamesWithGenre] = await Promise.all([
+    Genre.findById(req.params.id).exec(),
+    Game.find({genre: req.params.id}, 'title summary').exec()
+  ])
+
+  if (allGamesWithGenre.length > 0) {
+    res.render('genre_delete', {title: 'Delete Genre', genre, allGamesWithGenre})
+    return
+  } else {
+    await Genre.findByIdAndRemove(req.body.genreid)
+    res.redirect('/shop/genres')
+  }
+})
 
 exports.genreUpdateGet = asyncHandler(async(req, res, next) => {})
 exports.genreUpdatePost = asyncHandler(async(req, res, next) => {})
