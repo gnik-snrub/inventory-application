@@ -9,11 +9,11 @@ exports.platformCreateGet = asyncHandler(async(req, res, next) => {
   res.render('platform_form', { title: 'Create Platform' })
 })
 exports.platformCreatePost = [
-  body('name', 'Platform name must not be empty').trim().isLength({ min: 1 }),
-  body('price', 'Platform price cannot be less than 1').notEmpty().isInt({ min: 1 }),
+  body('name', 'Platform name must not be empty').trim().isLength({ min: 3, max: 100 }),
+  body('price', 'Platform price cannot be less than 1').notEmpty(),
   body('numberInStock', 'Platform in stock must not be empty').notEmpty(),
-  body('manufacturer', 'Platform manufacturer must be included').notEmpty(),
-  body('summary', 'Platform summary must not be empty').trim().isLength({ min: 1 }),
+  body('manufacturer', 'Platform manufacturer must be included').trim().isLength({ min: 3, max: 200 }),
+  body('summary', 'Platform summary must not be empty').trim().isLength({ min: 3, max: 50 }),
   body('releaseDate', 'Invalid date').isISO8601().toDate(),
   asyncHandler(async(req, res, next) => {
     const errors = validationResult(req)

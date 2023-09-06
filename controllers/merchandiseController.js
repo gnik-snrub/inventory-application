@@ -9,9 +9,9 @@ exports.merchandiseCreateGet = asyncHandler(async(req, res, next) => {
   res.render('merchandise_form', { title: 'Create Merchandise', allGames })
 })
 exports.merchandiseCreatePost = [
-  body('name', 'Title must not be empty').trim().notEmpty(),
-  body('price', 'Accessory must have price higher than 0').notEmpty().isInt({ min: 1 }),
-  body('summary', 'Accessory must have summary').trim().notEmpty(),
+  body('name', 'Title must not be empty').trim().isLength({min: 3, max: 100}),
+  body('price', 'Accessory must have price higher than 0').notEmpty(),
+  body('summary', 'Accessory must have summary').trim().isLength({min: 3, max: 200}),
   body('numberInStock', 'Accessory stock count must be included (0 is acceptable)').notEmpty(),
   body('relatedGames.*').escape(),
   asyncHandler(async(req, res, next) => {
