@@ -18,3 +18,6 @@ block content
   each game in merchandise.relatedGames
     li
       a(href=game.url) #{game.title}
+
+  hr
+  a(href=merchandise._id + '/delete') Delete Merchandise

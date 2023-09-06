@@ -48,8 +48,14 @@ exports.merchandiseCreatePost = [
   })
 ]
 
-exports.merchandiseDeleteGet = asyncHandler(async(req, res, next) => {})
-exports.merchandiseDeletePost = asyncHandler(async(req, res, next) => {})
+exports.merchandiseDeleteGet = asyncHandler(async(req, res, next) => {
+  const merchandise = await Merchandise.findById(req.params.id).exec()
+  res.render('merchandise_delete', {title: 'Delete Merchandise', merchandise})
+})
+exports.merchandiseDeletePost = asyncHandler(async(req, res, next) => {
+  await Merchandise.findByIdAndRemove(req.body.merchandiseid)
+  res.redirect('/shop/merchandises')
+})
 
 exports.merchandiseUpdateGet = asyncHandler(async(req, res, next) => {})
 exports.merchandiseUpdatePost = asyncHandler(async(req, res, next) => {})

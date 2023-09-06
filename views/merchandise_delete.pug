@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 #{title} #{merchandise.name}
+
+  hr
+
+  p Are you #[strong sure] you want to delete the "#{merchandise.name}" merchandise?
+
+  form(method='POST' action='')
+    div.form-group
+      input#merchandiseid.form-control(type='hidden' name='merchandiseid' required='true' value=merchandise._id)
+
+    button.btn.btn-primary(type='submit') Delete
