@@ -29,6 +29,7 @@ exports.merchandiseCreatePost = [
       const allGames = await Game.find().exec()
       res.render('merchandise_form', {
         title: 'Create Merchandise',
+        errors: errors.array(),
         allGames,
         merchandise
       })
