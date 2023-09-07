@@ -41,8 +41,27 @@ exports.platformCreatePost = [
   })
 ]
 
-exports.platformDeleteGet = asyncHandler(async(req, res, next) => {})
-exports.platformDeletePost = asyncHandler(async(req, res, next) => {})
+exports.platformDeleteGet = asyncHandler(async(req, res, next) => {
+  const [platform, allAccessoriesWithPlatform] = await Promise.all([
+    Platform.findById(req.params.id).exec(),
+    Accessory.find({compatiblePlatforms: req.params.id}).exec()
+  ])
+  res.render('platform_delete', { title: 'Delete Platform', platform, allAccessoriesWithPlatform })
+})
+exports.platformDeletePost = asyncHandler(async(req, res, next) => {
+  const [platform, allAccessoriesWithPlatform] = await Promise.all([
+    Platform.findById(req.params.id).exec(),
+    Accessory.find({compatiblePlatforms: req.params.id}).exec()
+  ])
+
+  if (allAccessoriesWithPlatform.length > 0) {
+    res.render('platform_delete', {title: 'Delete Platform', platform, allAccessoriesWithPlatform})
+    return
+  } else {
+    await Platform.findByIdAndRemove(req.body.platformid)
+    res.redirect('/shop/platforms')
+  }
+})
 
 exports.platformUpdateGet = asyncHandler(async(req, res, next) => {})
 exports.platformUpdatePost = asyncHandler(async(req, res, next) => {})

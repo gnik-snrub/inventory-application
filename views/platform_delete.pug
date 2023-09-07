@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 #{title} #{platform.name}
+
+  hr
+
+  if allAccessoriesWithPlatform.length > 0
+    p #[strong Delete the following accessories before deleting this platform]
+    div(style='margin-left: 20px;')
+      each accessories in allAccessoriesWithPlatform
+        li
+          a(href=accessories.url) #{accessories.name}
+  else
+    p Are you #[strong sure] you want to delete the "#{platform.name}" platform?
+
+    form(method='POST' action='')
+      div.form-group
+        input#platformid.form-control(type='hidden' name='platformid' required='true' value=platform._id)
+
+      button.btn.btn-primary(type='submit') Delete
