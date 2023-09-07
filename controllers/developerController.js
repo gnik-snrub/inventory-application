@@ -55,8 +55,30 @@ exports.developerDeletePost = asyncHandler(async(req, res, next) => {
   }
 })
 
-exports.developerUpdateGet = asyncHandler(async(req, res, next) => {})
-exports.developerUpdatePost = asyncHandler(async(req, res, next) => {})
+exports.developerUpdateGet = asyncHandler(async(req, res, next) => {
+  const developer = await Developer.findById(req.params.id)
+  res.render('developer_form', { title: 'Update Developer', developer})
+})
+exports.developerUpdatePost = [
+  body('name', 'Developer name must have at least one character').trim().isLength({ min: 1 }).escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const developer = new Developer({name: req.body.name, _id: req.params.id})
+
+    if (!errors.isEmpty()) {
+      res.render('developer_form', {
+        title: 'Create Developer',
+        developer,
+        errors: errors.array()
+      })
+      return
+    } else {
+      await Developer.findByIdAndUpdate(req.params.id, developer)
+      res.redirect(developer.url)
+    }
+  })
+]
 
 exports.developerDetail = asyncHandler(async(req, res, next) => {
   const [developer, developerGames] = await Promise.all([
