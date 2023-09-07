@@ -142,8 +142,28 @@ exports.gameCreatePost = [
   })
 ]
 
-exports.gameDeleteGet = asyncHandler(async(req, res, next) => {})
-exports.gameDeletePost = asyncHandler(async(req, res, next) => {})
+exports.gameDeleteGet = asyncHandler(async(req, res, next) => {
+  const [game, allMerchandiseWithGame] = await Promise.all([
+    Game.findById(req.params.id).exec(),
+    Merchandise.find({relatedGames: req.params.id}, "name").exec()
+  ])
+  res.render('game_delete', { title: 'Delete Game', game, allMerchandiseWithGame })
+})
+exports.gameDeletePost = asyncHandler(async(req, res, next) => {
+  const [game, allMerchandiseWithGame] = await Promise.all([
+    Game.findById(req.params.id).exec(),
+    Merchandise.find({relatedGames: req.params.id}, "name").exec()
+  ])
+
+  if (allMerchandiseWithGame.length > 0) {
+    res.render('genre_delete', {title: 'Delete Genre', game, allMerchandiseWithGame})
+    return
+  } else {
+    await Game.findByIdAndRemove(req.body.gameid)
+    res.redirect('/shop/games')
+  }
+
+})
 
 exports.gameUpdateGet = asyncHandler(async(req, res, next) => {})
 exports.gameUpdatePost = asyncHandler(async(req, res, next) => {})

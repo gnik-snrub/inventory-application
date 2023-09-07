@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 #{title} #{game.title}
+
+  hr
+
+  if allMerchandiseWithGame.length > 0
+    p #[strong Delete the following merchandise before deleting this game]
+    div(style='margin-left: 20px;')
+      each merchandise in allMerchandiseWithGame
+        li
+          a(href=merchandise.url) #{merchandise.name}
+  else
+    p Are you #[strong sure] you want to delete the "#{game.title}" game?
+
+    form(method='POST' action='')
+      div.form-group
+        input#gameid.form-control(type='hidden' name='gameid' required='true' value=game._id)
+
+      button.btn.btn-primary(type='submit') Delete

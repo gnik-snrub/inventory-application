@@ -6,7 +6,7 @@ block content
   form(method='POST' action='')
     div.form-group
       label(for='title') Game:
-      input#name.form-control(type='text' placeholder='Headset, Controller, etc.' name='title' value=(undefined===game ? '' : game.title))
+      input#name.form-control(type='text' placeholder='Mario, Halo, etc.' name='title' value=(undefined===game ? '' : game.title))
     div.form-group
       label(for='price') Price: 
       input#price.form-control(type='number' placeholder='$100, $200, etc.' name='price' value=(undefined===game ? '' : game.price))
