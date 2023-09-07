@@ -55,8 +55,30 @@ exports.genreDeletePost = asyncHandler(async(req, res, next) => {
   }
 })
 
-exports.genreUpdateGet = asyncHandler(async(req, res, next) => {})
-exports.genreUpdatePost = asyncHandler(async(req, res, next) => {})
+exports.genreUpdateGet = asyncHandler(async(req, res, next) => {
+  const genre = await Genre.findById(req.params.id)
+  res.render('genre_form', { title: 'Update Genre', genre})
+})
+exports.genreUpdatePost = [
+  body('name', 'Genre name must have at least one character').trim().isLength({ min: 1 }).escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const genre = new Genre({name: req.body.name, _id: req.params.id})
+
+    if(!errors.isEmpty()) {
+      res.render('genre_form', {
+        title: 'Create Genre',
+        genre,
+        errors: errors.array()
+      })
+      return
+    } else {
+      await Genre.findByIdAndUpdate(req.params.id, genre)
+      res.redirect(genre.url)
+    }
+  })
+]
 
 exports.genreDetail = asyncHandler(async(req, res, next) => {
   const [genre, genreGames] = await Promise.all([
