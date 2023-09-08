@@ -21,4 +21,8 @@ PlatformSchema.virtual('releaseDate_formatted').get(function() {
   return DateTime.fromJSDate(this.releaseDate).toLocaleString(DateTime.DATE_MED)
 })
 
+PlatformSchema.virtual('releaseDate_yyyy_mm_dd').get(function() {
+  return DateTime.fromJSDate(this.releaseDate).toISODate()
+})
+
 module.exports = mongoose.model('Platform', PlatformSchema)

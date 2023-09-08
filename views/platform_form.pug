@@ -18,7 +18,7 @@ block content
       input#manufacturer.form-control(type='text' placeholder='Sony, Nintendo, etc.' name='manufacturer' value=(undefined===platform ? '' : platform.manufacturer))
     div.form-group
       label(for='releaseDate') Release Date: 
-      input#releaseDate.form-control(type='date' placeholder='01/01/2001' name='releaseDate' value=(undefined===platform ? '' : platform.releaseDate))
+      input#releaseDate.form-control(type='date' placeholder='01/01/2001' name='releaseDate' value=(undefined===platform ? '' : platform.releaseDate_yyyy_mm_dd))
     div.form-group
       label(for='summary') Summary: 
       input#summary.form-control(type='textarea' placeholder='Summary goes here' name='summary' value=(undefined===platform ? '' : platform.summary))
