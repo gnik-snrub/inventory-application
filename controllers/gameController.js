@@ -109,19 +109,19 @@ exports.gameCreatePost = [
       ])
 
       for (const developer of allDevelopers) {
-        if (game.compatiblePlatforms.includes(developer._id)) {
+        if (game.developer.includes(developer._id)) {
           developer.checked = 'true'
         }
       }
 
       for (const genre of allGenres) {
-        if (game.compatiblePlatforms.includes(genre._id)) {
+        if (game.genre.includes(genre._id)) {
           genre.checked = 'true'
         }
       }
 
       for (const platform of allPlatforms) {
-        if (game.compatiblePlatforms.includes(platform._id)) {
+        if (game.platform.includes(platform._id)) {
           platform.checked = 'true'
         }
       }
