@@ -165,8 +165,94 @@ exports.gameDeletePost = asyncHandler(async(req, res, next) => {
 
 })
 
-exports.gameUpdateGet = asyncHandler(async(req, res, next) => {})
-exports.gameUpdatePost = asyncHandler(async(req, res, next) => {})
+exports.gameUpdateGet = asyncHandler(async(req, res, next) => {
+  const [game, allDevelopers, allGenres, allPlatforms] = await Promise.all([
+    Game.findById(req.params.id),
+    Developer.find().exec(),
+    Genre.find().exec(),
+    Platform.find().exec(),
+  ])
+  for (const developer of allDevelopers) {
+    if (game.developer.includes(developer._id)) {
+      developer.checked = 'true'
+    }
+  }
+
+  for (const genre of allGenres) {
+    if (game.genre.includes(genre._id)) {
+      genre.checked = 'true'
+    }
+  }
+
+  for (const platform of allPlatforms) {
+    if (game.platform.includes(platform._id)) {
+      platform.checked = 'true'
+    }
+  }
+  res.render('game_form', { title: 'Update Game', game, allDevelopers, allGenres, allPlatforms })
+})
+exports.gameUpdatePost = [
+  body('title', 'Game title must be between 3 and 100 characters').trim().isLength({min: 3, max: 100}),
+  body('price', 'Game must have a price').notEmpty(),
+  body('summary', 'Game summary must be between 3 and 200 characters').trim().isLength({min: 3, max: 200}),
+  body('numberInStock', 'Game stock count must be included').notEmpty(),
+  body('developer.*').escape(),
+  body('genre.*').escape(),
+  body('platform.*').escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const game = new Game({
+      title: req.body.title,
+      price: req.body.price,
+      summary: req.body.summary,
+      numberInStock: req.body.numberInStock,
+      developer: req.body.developer,
+      genre: req.body.genre,
+      platform: req.body.platform,
+      _id: req.params.id
+    })
+
+    if (!errors.isEmpty()) {
+      const [allDevelopers, allGenres, allPlatforms] = await Promise.all([
+        Developer.find().exec(),
+        Genre.find().exec(),
+        Platform.find().exec(),
+      ])
+
+      for (const developer of allDevelopers) {
+        if (game.developer.includes(developer._id)) {
+          developer.checked = 'true'
+        }
+      }
+
+      for (const genre of allGenres) {
+        if (game.genre.includes(genre._id)) {
+          genre.checked = 'true'
+        }
+      }
+
+      for (const platform of allPlatforms) {
+        if (game.platform.includes(platform._id)) {
+          platform.checked = 'true'
+        }
+      }
+
+      res.render('game_form', {
+        title: 'Create Game',
+        errors: errors.array(),
+        game,
+        allDevelopers,
+        allGenres,
+        allPlatforms
+      })
+      return
+    } else {
+      await Game.findByIdAndUpdate(req.params.id, game)
+      res.redirect(game.url)
+    }
+  })
+]
 
 exports.gameDetail = asyncHandler(async(req, res, next) => {
   const [game, relatedMerchandise] = await Promise.all([
