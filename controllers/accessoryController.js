@@ -57,8 +57,60 @@ exports.accessoryDeletePost = asyncHandler(async(req, res, next) => {
   res.redirect('/shop/accessories')
 })
 
-exports.accessoryUpdateGet = asyncHandler(async(req, res, next) => {})
-exports.accessoryUpdatePost = asyncHandler(async(req, res, next) => {})
+exports.accessoryUpdateGet = asyncHandler(async(req, res, next) => {
+  const [accessory, platforms] = await Promise.all([
+    Accessory.findById(req.params.id),
+    Platform.find()
+  ])
+
+  for (const platform of platforms) {
+    if (accessory.compatiblePlatforms.includes(platform._id)) {
+      platform.checked = 'true'
+    }
+  }
+
+  res.render('accessory_form', { title: 'Update Accessory', accessory, platforms})
+})
+exports.accessoryUpdatePost = [
+  body('name', 'Accessory name must be between 3 and 100 characters').trim().isLength({ min: 3, max: 100 }),
+  body('price', 'Accessory must have price higher than 0').notEmpty(),
+  body('numberInStock', 'Accessory stock count must be included').notEmpty(),
+  body('summary', 'Accessory summary must have between 3 and 200 characters').trim().isLength({ min: 3, max: 200 }),
+  body('compatiblePlatforms.*').escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const accessory = new Accessory({
+      name: req.body.name,
+      price: req.body.price,
+      summary: req.body.summary,
+      numberInStock: req.body.numberInStock,
+      compatiblePlatforms: req.body.compatiblePlatforms,
+      _id: req.params.id
+    })
+
+    if (!errors.isEmpty()) {
+      const platforms = await Platform.find().exec()
+
+      for (const platform of platforms) {
+        if (accessory.compatiblePlatforms.includes(platform._id)) {
+          platform.checked = 'true'
+        }
+      }
+
+      res.render('accessory_form', {
+        title: 'Create Accessory',
+        platforms,
+        accessory,
+        errors: errors.array()
+      })
+      return
+    } else {
+      await Accessory.findByIdAndUpdate(req.params.id, accessory)
+      res.redirect(accessory.url)
+    }
+  })
+]
 
 exports.accessoryDetail = asyncHandler(async(req, res, next) => {
   const accessory = await Accessory.findById(req.params.id).populate('compatiblePlatforms').exec()
