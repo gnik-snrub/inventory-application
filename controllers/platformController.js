@@ -63,8 +63,43 @@ exports.platformDeletePost = asyncHandler(async(req, res, next) => {
   }
 })
 
-exports.platformUpdateGet = asyncHandler(async(req, res, next) => {})
-exports.platformUpdatePost = asyncHandler(async(req, res, next) => {})
+exports.platformUpdateGet = asyncHandler(async(req, res, next) => {
+  const platform = await Platform.findById(req.params.id)
+  res.render('platform_form', { title: 'Update Platform', platform})
+})
+exports.platformUpdatePost = [
+  body('name', 'Platform name must be between 3 and 100 characters').trim().isLength({ min: 3, max: 100 }),
+  body('price', 'Platform price cannot be not be empty').notEmpty(),
+  body('numberInStock', 'Platform in stock must not be empty').notEmpty(),
+  body('manufacturer', 'Platform manufacturer must be between 3 and 50 characters').trim().isLength({ min: 3, max: 50 }),
+  body('summary', 'Platform summary must be between 3 and 200 characters').trim().isLength({ min: 3, max: 200 }),
+  body('releaseDate', 'Invalid date').isISO8601().toDate(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const platform = new Platform({
+      name: req.body.name,
+      price: req.body.price,
+      numberInStock: req.body.numberInStock,
+      summary: req.body.summary,
+      manufacturer: req.body.manufacturer,
+      releaseDate: req.body.releaseDate,
+      _id: req.params.id
+    })
+
+    if (!errors.isEmpty()) {
+      res.render('platform_form', {
+        title: 'Create Platform',
+        platform,
+        errors: errors.array()
+      })
+      return
+    } else {
+      await Platform.findByIdAndUpdate(req.params.id, platform)
+      res.redirect(platform.url)
+    }
+  })
+]
 
 exports.platformDetail = asyncHandler(async(req, res, next) => {
   const [platform, platformGames, platformAccessories] = await Promise.all([
