@@ -9,10 +9,10 @@ block content
 
   p #[strong Unique Items] | In Stock
 
-  p #[strong Games - !{gameCount}] | !{gameStockCount[0].numberInStock}
-  p #[strong Platforms - !{platformCount}] | !{platformStockCount[0].numberInStock}
-  p #[strong Accessories - !{accessoryCount}] | !{accessoryStockCount[0].numberInStock}
-  p #[strong Merchandise - !{merchandiseCount}] | !{merchandiseStockCount[0].numberInStock}
+  p #[strong Games - !{gameCount}] | !{gameCount < 1 ? '0' : gameStockCount[0].numberInStock}
+  p #[strong Platforms - !{platformCount}] | !{ platformCount < 1 ? '0' : platformStockCount[0].numberInStock}
+  p #[strong Accessories - !{accessoryCount}] | !{ accessoryCount < 1 ? '0' : accessoryStockCount[0].numberInStock}
+  p #[strong Merchandise - !{merchandiseCount}] | !{merchandiseStockCount < 1 ? '0' : merchandiseStockCount[0].numberInStock}
   hr
   p #[strong Genres - ] !{genreCount}
   p #[strong Developers - ] !{developerCount}

@@ -3,7 +3,8 @@ extends layout
 block content
   h1= title
 
-  hr
+  if allGames.length === 0
+    hr
 
   each game in allGames
     hr
